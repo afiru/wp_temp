@@ -1,0 +1,16 @@
+@charset "utf-8";
+@import 'sass_base/mixin';
+@import 'sass_base/slider';
+@import 'sass_base/mixin';
+@import 'sass_base/animate';
+@import 'sass_base/icon_arrow';
+@import 'sass_base/coding_guideline';
+.wapper {
+    @include wapper_setting();    
+}
+
+//トップページ部分
+@import 'main_include/header/_header_pc';
+@import 'main_include/header/_header_sp';
+
+

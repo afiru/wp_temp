@@ -1,0 +1,70 @@
+@charset "utf-8";
+@import 'sass_base/base';
+@import 'mysetting';
+@import 'sass_base/mixin';
+@import 'sass_base/animate';
+@import 'sass_base/icon_arrow';
+
+//基本設定
+ul,li,dd,dt,dh {
+    list-style: none;
+}
+svg {
+    display: block;
+}
+
+.pc_only {
+    @include pc_only();
+}
+.sp_only {
+    @include sp_only();
+}
+
+.t_center {
+    text-align: center;
+}
+@for $i from 0 through 30 {
+    $list : $i * 10;
+    .margin_#{$list} {
+        @include marginPercent(1920 , $list , auto , 0 , auto );
+    }
+    .margin_wapper_#{$list} {
+        @include marginPercent($pc_wapper_size_px , $list , auto , 0 , auto );
+    }
+    @for $x from 0 through 30 {
+	$listx : $x * 10;
+	.padding_top_#{$i * 10}_bottom_#{$x * 10} {
+            @include paddingPercent(1920 , $list , 0 , $listx , 0);
+	}
+        .padding_wapper_top_#{$i * 10}_bottom_#{$x * 10} {
+            @include paddingPercent($pc_wapper_size_px , $list , 0 , $listx , 0);
+        }
+    }
+}
+@for $i from 0 through 10 {
+	@for $x from 0 through 10 {
+	    .pc_order_#{$i}_sp_#{$x} {
+	        order: $i;
+	        @include media($sp) {
+	            order: $x;
+	        }
+	    }
+	}
+	.pc_order_#{$i} {
+		order: $i;
+	        @include media($sp) {
+	            order: auto;
+	        }
+	}
+}
+
+.kinout_text {
+    text-align: justify;
+    text-justify: inter-ideograph;    
+}
+
+//トップページ部分
+@import 'main_include/index/_index';
+//フッター部分
+@import 'main_include/footer/_footer';
+@import 'lightbox.min';

@@ -1,0 +1,109 @@
+@charset "utf-8";
+//@import 'sass_base/base';
+@import 'sass_base/mixin';
+@import 'sass_base/animate';
+@import 'sass_base/icon_arrow';
+body {
+    height: auto;
+}
+
+.wrap_like_count {
+    margin: 10px 20px 0 2px;
+    .wappers {
+        input {
+            padding: 1%;
+            width: 100%;
+        }
+    }
+    h2 {
+        font-size: 20px !important;
+        padding: 15px 0 15px 10px !important;
+        margin: 25px 0 10px 0 !important;
+        border-bottom: 1px solid #CCC;
+        border-top: 1px solid #CCC;
+        font-weight: 600;
+        background: #FFF;
+    }
+    .setumei {
+        margin: 2% 0;
+        background: #FFF;
+        padding: 15px;
+        p {
+            font-size: 12px;
+            line-height: 150%;
+        }
+    }
+    .kenksaku{
+        margin: 4% 0;
+        @include outer-container(100%);
+        .input_wapper {
+            @include outer-container(100%);
+            margin: 0 0 1% 0;
+            input {
+                width: 48%;
+                font-size: 12px;
+                padding: 1%;
+                float: left;
+                &:last-child {
+                    float: right;
+                }
+            }
+        }
+
+        .button_like {
+            margin: 1% 0 0 0;
+            @include outer-container(100%);
+            button {
+                width: 20%;
+                float: right;
+                padding: 1%;
+                @include buttontype04(#666,#666,1px,#FFF,#FFF,#666,#666); display:block;
+                @include kadomaru(10px);
+                &:last-child {
+                    margin: 0 2% 0 2%;
+                }
+            }
+        }
+    }
+    .table_wapper {
+        margin: 4% 0 6% 0;
+        table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+            border-spacing: 0;
+            th,td {
+                padding: 1%;
+                background: #FFF;
+                border: 1px solid #000;
+                @include rs_font_size(12px,1.2244897959183674vw,1.875vw);
+                //フォント（px）【PC】:12pxpx |【Tab】12px |【sp】 12px 
+                //設定サイズ（px）【PC】:980px |【Tab】980px |【sp】 640px
+            }
+            th {
+                text-align: center;
+                font-weight: 600;
+                background: #666;
+                color: #FFF;
+            }
+            .chack_box {
+                width: 5%;
+                text-align: center;
+            }
+            .user_name {
+                width: 10%;
+            }
+            .user_push_title {
+                width: 20%;
+            }
+            .date {
+                width: 20%;
+            }
+        }
+    }
+}
+#text_cheange input {
+    width: 100%;
+    padding: 1%;
+    
+}

@@ -1,0 +1,88 @@
+@charset "utf-8";
+@import 'sass_base/mixin';
+@import 'sass_base/base';
+@import 'sass_base/mixin';
+@import 'sass_base/animate';
+@import 'sass_base/icon_arrow';
+.pc_only {
+    @include pc_only();
+}
+.sp_only {
+    @include sp_only();
+}
+.test {
+    background: url("#{$imgpass}/back");
+}
+.pc_display_flex_center {
+    @include media($pc){
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    @include media($tab) {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    @include media($sp) {
+        display: none;
+    }
+}
+.sp_display_flex_center {
+    @include media($sp) {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    @include media($pc){
+        display: none;
+    }
+    @include media($tab) {
+        display: none;
+    }
+}
+
+.wapper {
+    @include wapper_setting();
+    @include imgwidth();
+}
+
+.display_flex_center {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.display_flex_stretch {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.display_row {
+    flex-flow: row wrap;
+}
+body {
+    font-family: 'Noto Sans JP',sans-serif;
+    visibility: hidden;
+}
+.wf-active body {
+    visibility: visible;
+}
+#mintyou {
+    font-family:"Noto Serif JP",serif;
+    visibility: hidden;
+}
+.wf-active #mintyou {
+    visibility: visible;
+}
+
+
+.header_amp_box {
+    @include paddingPercent(640 , 10 , 0 , 10 , 10);
+    h1 {
+        width: 250px;
+        @include ontener_width(640 , 250);
+    }
+    .header_sp_button {
+        width: 60px;
+    }
+}

@@ -1,0 +1,29 @@
+            .wrap h2 {
+                font-size: 25px;
+                padding: 15px 0;
+                border-bottom: 2px solid #000;
+                text-align: center;
+            }
+            .wrap h3 {
+                font-size: 20px;
+                padding: 15px 0 15px 10px;
+                margin: 25px 0 10px 0;
+                border-bottom: 1px solid #CCC;
+                border-top: 1px solid #CCC;
+                background: #FFF;
+            }
+            .wrap table {
+                width: 100%;
+            }
+            .wrap table th {
+                width: 30%;
+                vertical-align: middle;
+            }
+            .wrap table td {
+                width: 70%;
+                vertical-align: middle;
+            }
+            .wrap table td input {
+                width: 100%;
+                padding: 10px;
+            }
