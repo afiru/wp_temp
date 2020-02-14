@@ -10,6 +10,7 @@ function remove_recent_comments_style() {
 }
 add_action( 'widgets_init', 'remove_recent_comments_style' );
 add_theme_support( 'post-thumbnails' ); //サムネイルをサポートさせる。
+add_theme_support('post-thumbnails', array('post','page'));
 
 
 //勝手に読み込まれるJSを削除

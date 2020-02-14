@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Optimize Database after Deleting Revisions
- * @version 4.8.0
+ * @version 4.8.8
  */
 /*
 Plugin Name: Optimize Database after Deleting Revisions
@@ -10,7 +10,7 @@ Description: Optimizes the Wordpress Database after Cleaning it out
 Author: CAGE Web Design | Rolf van Gelder, Eindhoven, The Netherlands
 Author URI: http://cagewebdev.com
 Network: True
-Version: 4.8.0
+Version: 4.8.8
 */
 
 /********************************************************************************************
@@ -28,13 +28,13 @@ $odb_class = new OptimizeDatabase();
 
 class OptimizeDatabase {
 	// VERSION
-	var $odb_version           = '4.8.0';
-	var $odb_release_date      = '05/26/2019';
+	var $odb_version           = '4.8.8';
+	var $odb_release_date      = '12/02/2019';
 
 	// PLUGIN OPTIONS
 	var $odb_rvg_options       = array();
 	
-	// EXCLUDED TABELS
+	// EXCLUDED TABLES
 	var $odb_rvg_excluded_tabs = array();
 
 	// MULTISITE STRUCTURE
@@ -135,9 +135,6 @@ class OptimizeDatabase {
 		
 		// INITIALIZE WORDPRESS HOOKS
 		$this->odb_init_hooks();
-		
-		// GET THE DATABASE TABLES
-		$this->odb_tables = $this->odb_utilities_obj->odb_get_tables();
 			
 		// GET EXCLUDED TABLES FROM SETTINGS
 		$this->odb_rvg_excluded_tabs = $this->odb_multisite_obj->odb_ms_get_option('odb_rvg_excluded_tabs');
@@ -701,12 +698,12 @@ class OptimizeDatabase {
 			 ****************************************************************************************/
 			$this->odb_displayer_obj->display_start_buttons($action);
 		 
-			 // REGISTER THE LAST RUN
-			$this->odb_rvg_options['last_run'] = current_time('M j, Y @ H:i', 0);
 			// DELETE REDUNDANT DATA
 			$this->odb_cleaner_obj->odb_run_cleaner($scheduler, $action);
 
-			if (!$scheduler && ($action == 'run_summary' || $action == 'run_detail')) {
+			if ($scheduler || $action == 'run_summary' || $action == 'run_detail') {
+				 // REGISTER THE LAST RUN
+				$this->odb_rvg_options['last_run'] = current_time('M j, Y @ H:i', 0);				
 				// OPTIMIZE DATABASE TABLES
 				$this->odb_cleaner_obj->odb_run_optimizer($scheduler, $action);
 				// SHOW RESULTS

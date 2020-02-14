@@ -126,6 +126,14 @@ class ODB_Displayer {
 			 echo '<span class="odb-bold">'.__('Maximum number of - most recent - revisions to keep per post / page', $odb_class->odb_txt_domain).':</span> <span class="odb-bold odb-blue">'.$odb_class->odb_rvg_options['nr_of_revisions'].'</span><br>';
 		 }
 		 
+		 // v4.8.6
+		 $lastrun = '';
+		 if ($odb_class->odb_rvg_options['last_run_seconds'] == '') {
+			 $lastrun = '<span class="odb-bold">' . __('Last run', $odb_class->odb_txt_domain) . ':</span> <span class="odb-bold odb-blue">' . $odb_class->odb_rvg_options['last_run'] . '</span><br>';
+		 } else {
+			 $lastrun = '<span class="odb-bold">' . __('Last run', $odb_class->odb_txt_domain) . ':</span> <span class="odb-bold odb-blue">' . $odb_class->odb_rvg_options['last_run'] . ' ' . __('hrs', $odb_class->odb_txt_domain) . ' (' . __('in', $odb_class->odb_txt_domain) . ' ' .$odb_class->odb_rvg_options['last_run_seconds'] . ' ' . __('seconds', $odb_class->odb_txt_domain) . ')</span><br>';
+		 }
+		 
 		 echo '
 		  <span class="odb-bold">'.__('Delete trashed items', $odb_class->odb_txt_domain).':</span> <span class="odb-bold odb-blue">'.$trash.'</span><br>
 		  <span class="odb-bold">'.__('Delete spammed items', $odb_class->odb_txt_domain).':</span> <span class="odb-bold odb-blue">'.$spam.'</span><br>
@@ -136,7 +144,7 @@ class ODB_Displayer {
 		  <span class="odb-bold">'.__('Keep a log', $odb_class->odb_txt_domain).':</span> <span class="odb-bold odb-blue">'.$log.'</span><br>
 		  <span class="odb-bold">'.__('Optimize InnoDB tables', $odb_class->odb_txt_domain).':</span> <span class="odb-bold odb-blue">'.$innodb.'</span><br>
 		  <span class="odb-bold">'.__('Number of excluded tables', $odb_class->odb_txt_domain).':</span> <span class="odb-bold odb-blue">'.count($odb_class->odb_rvg_excluded_tabs).'</span><br>
-		  <span class="odb-bold">'.__('Last run', $odb_class->odb_txt_domain) . ':</span> <span class="odb-bold odb-blue">'.$odb_class->odb_rvg_options['last_run'] . ' ' . __('hrs', $odb_class->odb_txt_domain). ' (' . __('in', $odb_class->odb_txt_domain) . ' ' .$odb_class->odb_rvg_options['last_run_seconds'] . ' ' . __('seconds', $odb_class->odb_txt_domain) . ')</span><br>
+		  ' . $lastrun . '
 		  <span class="odb-bold">' . __('Scheduler', $odb_class->odb_txt_domain) . ':</span> <span class="odb-bold odb-blue">' . $schedule . '</span><br>
 		';
 		
@@ -185,8 +193,10 @@ class ODB_Displayer {
 		if(!defined('RUN_OPTIMIZE_DATABASE')) {
 			echo '
 		<div id="odb-start-buttons" class="odb-padding-left">
+		  <br>
 		  <p>
 		  <input class="button odb-normal" type="button" name="change_options" value="'.__('Change Settings', $odb_class->odb_txt_domain).'" onclick="self.location=\'options-general.php?page=odb_settings_page\'">
+		  <br><br>
 			';
 	
 			// v4.6
@@ -211,21 +221,19 @@ function odb_confirm_delete() {
 				// NOT RUNNING: SHOW LOG- AND START BUTTONS
 				if($odb_class->odb_logger_obj->odb_log_count() > 0) {
 					echo '
-		  &nbsp;
 		  <input class="button odb-normal" type="button" name="view_log" value="'.__('View Log', $odb_class->odb_txt_domain).'" onclick="self.location=\'tools.php?page=rvg-optimize-database&action=view_log\'">
 		  &nbsp;
 		  <input class="button odb-normal" type="button" name="clear_log" value="'.__('Clear Log', $odb_class->odb_txt_domain).'" onclick="return odb_confirm_delete();">
-		  &nbsp;		
+		  <br><br>
 					';
 				} // if($odb_class->odb_logger_obj->odb_log_count() > 0)
 				
 				// v4.8.0
 				echo '
-          &nbsp;
-		  <input class="button-primary button-large" type="button" name="analyze_summary" value="'.__('Analyze (summary)', $odb_class->odb_txt_domain).'" onclick="self.location=\'tools.php?page=rvg-optimize-database&action=analyze_summary\'" class="odb-bold">
+          <input class="button-primary button-large" type="button" name="analyze_summary" value="'.__('Analyze (summary)', $odb_class->odb_txt_domain).'" onclick="self.location=\'tools.php?page=rvg-optimize-database&action=analyze_summary\'" class="odb-bold">
           &nbsp;
 		  <input class="button-primary button-large" type="button" name="analyze_detail" value="'.__('Analyze (detail)', $odb_class->odb_txt_domain).'" onclick="self.location=\'tools.php?page=rvg-optimize-database&action=analyze_detail\'" class="odb-bold">
-		  &nbsp;	
+		  <br><br>
 		  <input class="button-primary button-large" type="button" name="run_summary" value="'.__('Optimize (summary)', $odb_class->odb_txt_domain).'" onclick="self.location=\'tools.php?page=rvg-optimize-database&action=run_summary\'" class="odb-bold">
 		  &nbsp;	
 		  <input class="button-primary button-large" type="button" name="run_detail" value="'.__('Optimize (detail)', $odb_class->odb_txt_domain).'" onclick="self.location=\'tools.php?page=rvg-optimize-database&action=run_detail\'" class="odb-bold">

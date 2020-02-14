@@ -3,8 +3,8 @@ Contributors: Hiroaki Miyashita
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WN7Y2442JPRU6
 Tags: custom field, custom fields, custom, fields, field, template, meta, custom field template, custom post type, acf, advanced
 Requires at least: 2.1
-Tested up to: 5.0
-Stable tag: 2.4.6
+Tested up to: 5.2.3
+Stable tag: 2.4.9
 License: GPLv2 or later
 
 The Custom Field Template plugin extends the functionality of custom fields.
@@ -74,7 +74,7 @@ Localization
 * Hungarian (hu_HU) - [Balazs Kovacs](http://www.netpok.hu)
 * Indonesian (id_ID) - [Masino Sinaga](http://www.openscriptsolution.com/)
 * Italian (it_IT) - [Gianni Diurno](http://gidibao.net/)
-* Japanese (ja) - [Hiroaki Miyashita](http://wpgogo.com/)
+* Japanese (ja) - [Hiroaki Miyashita](https://wpgogo.com/)
 * Dutch (nl_NL) - [Rene](http://wordpresswebshop.com/)
 * Polish (pl_PL) - [Difreo](http://www.difreo.pl/)
 * Brazilian Portuguese (pt_BR) - [Caciano Gabriel](http://www.gn10.com.br/)
@@ -113,6 +113,15 @@ See the default template and modify it.
 4. Auto Hook of `the_content()` in the option page of this plugin may help you do this. You can use [cft] shortcodes here. You can switch the cft formats in each category.
 
 == Changelog ==
+
+= 2.4.9 =
+* Bugfix: Auto Hook of `the_content()`.
+
+= 2.4.8 =
+* Bugfix: custom field template option.
+
+= 2.4.7 =
+* `Before the more tag` position for Auto Hook of `the_content()`.
 
 = 2.4.6 =
 * Code cleaning.

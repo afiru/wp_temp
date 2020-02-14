@@ -68,7 +68,7 @@ class ODB_Logger {
 			";
 			$wpdb->get_results($this->sql);
 		} // if($odb_class->odb_rvg_options['logging_on'] == "Y")
-	} // add_log_db()
+	} // odb_add_log()
 	
 
 	/********************************************************************************************

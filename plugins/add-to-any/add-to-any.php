@@ -3,7 +3,7 @@
 Plugin Name: AddToAny Share Buttons
 Plugin URI: https://www.addtoany.com/
 Description: Share buttons for your pages including AddToAny's universal sharing button, Facebook, Twitter, Google+, Pinterest, WhatsApp and many more.
-Version: 1.7.36
+Version: 1.7.39
 Author: AddToAny
 Author URI: https://www.addtoany.com/
 Text Domain: add-to-any
@@ -13,7 +13,7 @@ Domain Path: /languages
 // Explicitly globalize to support bootstrapped WordPress
 global $A2A_locale, $A2A_FOLLOW_services,
 	$A2A_SHARE_SAVE_options, $A2A_SHARE_SAVE_plugin_dir, $A2A_SHARE_SAVE_plugin_url, 
-	$A2A_SHARE_SAVE_services, $A2A_SHARE_SAVE_amp_icons_css;
+	$A2A_SHARE_SAVE_services;
 
 $A2A_SHARE_SAVE_plugin_dir = untrailingslashit( plugin_dir_path( __FILE__ ) );
 $A2A_SHARE_SAVE_plugin_url = untrailingslashit( plugin_dir_url( __FILE__ ) );
@@ -184,8 +184,7 @@ function ADDTOANY_SHARE_SAVE_ICONS( $args = array() ) {
 	// $args array: output_later, html_container_open, html_container_close, html_wrap_open, html_wrap_close, linkname, linkurl
 	
 	global $A2A_SHARE_SAVE_services,
-		$A2A_FOLLOW_services,
-		$A2A_SHARE_SAVE_amp_icons_css;
+		$A2A_FOLLOW_services;
 	
 	$options = get_option( 'addtoany_options', array() );
 	
@@ -213,7 +212,6 @@ function ADDTOANY_SHARE_SAVE_ICONS( $args = array() ) {
 	$args = wp_parse_args( $args, $defaults );
 	
 	$is_amp = function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ? true : false;
-	$amp_css = '.a2a_dd img{background-color:#0166FF;}';
 	
 	// Large icons except for AMP endpoint
 	$large_icons = $is_amp ? false : true;
@@ -326,7 +324,7 @@ function ADDTOANY_SHARE_SAVE_ICONS( $args = array() ) {
 			$height_attr = isset( $service['icon_height'] ) ? ' height="' . esc_attr( $service['icon_height'] ) . '"' : ' height="16"';
 			$height_attr = $is_amp && ! empty( $args['icon_size'] ) ? ' height="' . esc_attr( $args['icon_size'] ) . '"' : $height_attr;
 			
-			$amp_css .= $is_amp && ! empty( $service['color'] ) ? '.a2a_button_' . esc_attr( $code_name ) . ' img{background-color:#' . $service['color'] . ';}' : '';
+			$img_style_attr = $is_amp && ! empty( $service['color'] ) ? ' style="background-color:#' . esc_attr( $service['color'] ) . ';"' : '';
 			
 			$url = isset( $href ) ? $href : 'https://www.addtoany.com/add_to/' . $code_name . '?linkurl=' . $args['linkurl_enc'] .'&amp;linkname=' . $args['linkname_enc'];
 			$src = $icon_url ? $icon_url : $icons_dir . $icon . '.' . $icons_type;
@@ -356,7 +354,7 @@ function ADDTOANY_SHARE_SAVE_ICONS( $args = array() ) {
 			}
 			
 			$link = $args['html_wrap_open'] . "<a$class_attr$href_attr$title_attr$rel_attr$target_attr>";
-			$link .= ( $large_icons && ! isset( $custom_icons ) && ! $custom_service ) ? '' : '<img src="' . esc_attr( $src ) . '"' . $width_attr . $height_attr . ' alt="' . esc_attr( $name ) . '">';
+			$link .= ( $large_icons && ! isset( $custom_icons ) && ! $custom_service ) ? '' : '<img' . $img_style_attr . ' src="' . esc_attr( $src ) . '"' . $width_attr . $height_attr . ' alt="' . esc_attr( $name ) . '">';
 			$link .= "</a>" . $args['html_wrap_close'];
 		}
 		
@@ -364,11 +362,6 @@ function ADDTOANY_SHARE_SAVE_ICONS( $args = array() ) {
 	}
 	
 	$ind_html .= $args['html_container_close'];
-	
-	if ( $is_amp ) {
-		$A2A_SHARE_SAVE_amp_icons_css = $amp_css;
-		add_action( 'amp_post_template_css', 'addtoany_amp_icons_css' );
-	}
 	
 	if ( true == $args['output_later'] )
 		return $ind_html;
@@ -423,6 +416,7 @@ function ADDTOANY_SHARE_SAVE_BUTTON( $args = array() ) {
 			$button_src		= $options['button_custom'];
 			$button_width	= '';
 			$button_height	= '';
+			$button_style   = '';
 		} else if ( isset( $options['button'] ) && 'TEXT' == $options['button'] ) {
 			// Text-only button
 			$button_text	= stripslashes( $options[ 'button_text'] );
@@ -435,6 +429,7 @@ function ADDTOANY_SHARE_SAVE_BUTTON( $args = array() ) {
 				$button_src    = 'https://static.addtoany.com/buttons/a2a.svg';
 				$button_width  = ! empty( $args['icon_size'] ) ? ' width="' . $args['icon_size'] .'"'  : ' width="32"';
 				$button_height = ! empty( $args['icon_size'] ) ? ' height="' . $args['icon_size'] .'"'  : ' height="32"';
+				$button_style  = $is_amp ? ' style="background-color:#0166ff"' : '';
 			}
 		}
 		
@@ -443,7 +438,7 @@ function ADDTOANY_SHARE_SAVE_BUTTON( $args = array() ) {
 		} elseif ( ! empty( $button_text ) ) {
 			$button = $button_text;
 		} elseif ( ! empty( $button_src ) ) {
-			$button	= '<img src="' . $button_src . '"' . $button_width . $button_height . ' alt="Share">';
+			$button	= '<img src="' . $button_src . '"' . $button_width . $button_height . $button_style . ' alt="Share">';
 		} else {
 			$button = '';
 		}
@@ -928,7 +923,7 @@ function A2A_SHARE_SAVE_add_to_content( $content ) {
 			
 			// Pages
 			// Individual pages
-			( is_page() && isset( $options['display_in_pages'] ) && $options['display_in_pages'] == '-1' ) ||
+			( is_singular('page') && isset( $options['display_in_pages'] ) && $options['display_in_pages'] == '-1' ) ||
 			// Attachment (media) pages
 			( is_attachment() && isset( $options['display_in_attachments'] ) && $options['display_in_attachments'] == '-1' ) ||
 			// <!--nosharesave--> legacy tag
@@ -981,8 +976,12 @@ function A2A_SHARE_SAVE_add_to_content( $content ) {
 
 function A2A_SHARE_SAVE_pre_get_posts( $query ) {
 	if ( $query->is_main_query() ) {
-		add_filter( 'the_content', 'A2A_SHARE_SAVE_add_to_content', 98 );
-		add_filter( 'the_excerpt', 'A2A_SHARE_SAVE_add_to_content', 98 );
+		// Hook to change the standard buttons' priority number in content
+		// Example: add_filter( 'addtoany_content_priority', 20 );
+		$priority = apply_filters( 'addtoany_content_priority', 98 );
+
+		add_filter( 'the_content', 'A2A_SHARE_SAVE_add_to_content', $priority );
+		add_filter( 'the_excerpt', 'A2A_SHARE_SAVE_add_to_content', $priority );
 	}
 }
 

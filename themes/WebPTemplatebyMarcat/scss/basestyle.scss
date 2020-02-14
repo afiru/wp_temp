@@ -4,7 +4,12 @@
 @import 'sass_base/mixin';
 @import 'sass_base/animate';
 @import 'sass_base/icon_arrow';
-
+.back_000 {
+    background: #000;
+}
+.color_fff {
+    color: #FFF;
+}
 //基本設定
 ul,li,dd,dt,dh {
     list-style: none;

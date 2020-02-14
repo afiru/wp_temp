@@ -1,7 +1,7 @@
 <?php
 //ウィジェットの項目を増やしたい場合はここで増やしていく
 $wiget_header = array('header_01','header_02','header_03');
-$wiget_index = array('index_01','index_02','index_03','index_04','index_05','index_06');
+$wiget_index = array('index_fv_text','index_01','index_02','index_03','index_04','index_05','index_06');
 $wiget_sidebar = array('sidebar_01','sidebar_02','sidebar_03','sidebar_04');
 $wiget_footer = array('footer_01','footer_02','footer_03','footer_04');
 $wiget_footer = array('sitemap');

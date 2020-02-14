@@ -5,7 +5,7 @@ Plugin URI: https://wpgogo.com/development/custom-field-template.html
 Description: This plugin adds the default custom fields on the Write Post/Page.
 Author: Hiroaki Miyashita
 Author URI: https://wpgogo.com/
-Version: 2.4.6
+Version: 2.4.9
 Text Domain: custom-field-template
 Domain Path: /
 */
@@ -15,7 +15,7 @@ This program is based on the rc:custom_field_gui plugin written by Joshua Sigar.
 I appreciate your efforts, Joshua.
 */
 
-/*  Copyright 2008 -2018 Hiroaki Miyashita
+/*  Copyright 2008 -2019 Hiroaki Miyashita
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -865,12 +865,21 @@ type = file';
 	}
 
 	function custom_field_template_admin_menu() {
+		$options = $this->get_custom_field_template_data();
 		add_options_page(__('Custom Field Template', 'custom-field-template'), __('Custom Field Template', 'custom-field-template'), 'manage_options', basename(__FILE__), array(&$this, 'custom_field_template_admin'));
+		if ( empty($options['custom_field_template_disable_admin_search']) ) :
+			//add_action('load-edit.php', array(&$this, 'custom_field_template_add_help_tab') );
+		endif;
 	}
 	
+	function custom_field_template_add_help_tab() {
+		$screen = get_current_screen();
+
+	}
 	
 	function custom_field_template_get_the_excerpt($excerpt) {
 		$options = $this->get_custom_field_template_data();
+
 		if ( empty($excerpt) ) $this->is_excerpt = true;
 		if ( !empty($options['custom_field_template_excerpt_shortcode']) ) return do_shortcode($excerpt);
 		else return $excerpt;
@@ -895,7 +904,7 @@ type = file';
 					$strip_shortcode = 1;
 					continue;
 				endif;
-
+		
 				$options['hook'][$i]['content'] = stripslashes($options['hook'][$i]['content']);
 				if ( is_feed() && empty($options['hook'][$i]['feed']) ) break;
 				if ( !empty($options['hook'][$i]['category']) ) :
@@ -908,12 +917,15 @@ type = file';
 						$needle = array_unique(array_filter(array_map('trim', $needle)));
 						foreach ( $needle as $val ) :
 							if ( in_array($val, $cats ) ) :
-								if ( $options['hook'][$i]['position'] == 0 )
+								if ( $options['hook'][$i]['position'] == 0 ) :
 									$content .= $options['hook'][$i]['content'];
-								elseif ( $options['hook'][$i]['position'] == 2 )
+								elseif ( $options['hook'][$i]['position'] == 2 ) :
 									$content = preg_replace('/\[cfthook hook='.$i.'\]/', $options['hook'][$i]['content'], $content);
-								else
+								elseif ( $options['hook'][$i]['position'] == 3 ) :
+									$content = preg_replace('/(<span id="more-[0-9]+"><\/span>)/', $options['hook'][$i]['content']."$1", $content);
+								else :
 									$content = $options['hook'][$i]['content'] . $content;
+								endif;
 								break;
 							endif;
 						endforeach;
@@ -923,24 +935,30 @@ type = file';
 						if ( !empty($options['hook'][$i]['use_php']) ) :
 							$options['hook'][$i]['content'] = $this->EvalBuffer(stripcslashes($options['hook'][$i]['content']));
 						endif;
-						if ( $options['hook'][$i]['position'] == 0 )
+						if ( $options['hook'][$i]['position'] == 0 ) :
 							$content .= $options['hook'][$i]['content'];
-						elseif ( $options['hook'][$i]['position'] == 2 )
+						elseif ( $options['hook'][$i]['position'] == 2 ) :
 							$content = preg_replace('/\[cfthook hook='.$i.'\]/', $options['hook'][$i]['content'], $content);
-						else
+						elseif ( $options['hook'][$i]['position'] == 3 ) :
+							$content = preg_replace('/(<span id="more-[0-9]+"><\/span>)/', $options['hook'][$i]['content']."$1", $content);
+						else :
 							$content = $options['hook'][$i]['content'] . $content;
+						endif;
 					endif;		
 				elseif ( $options['hook'][$i]['post_type']=='page' ) :
 					if ( is_page() ) :
 						if ( !empty($options['hook'][$i]['use_php']) ) :
 							$options['hook'][$i]['content'] = $this->EvalBuffer(stripcslashes($options['hook'][$i]['content']));
 						endif;
-						if ( $options['hook'][$i]['position'] == 0 )
+						if ( $options['hook'][$i]['position'] == 0 ) :
 							$content .= $options['hook'][$i]['content'];
-						elseif ( $options['hook'][$i]['position'] == 2 )
+						elseif ( $options['hook'][$i]['position'] == 2 ) :
 							$content = preg_replace('/\[cfthook hook='.$i.'\]/', $options['hook'][$i]['content'], $content);
-						else
+						elseif ( $options['hook'][$i]['position'] == 3 ) :
+							$content = preg_replace('/(<span id="more-[0-9]+"><\/span>)/', $options['hook'][$i]['content']."$1", $content);
+						else :
 							$content = $options['hook'][$i]['content'] . $content;
+						endif;
 					endif;
 				elseif ( $options['hook'][$i]['custom_post_type'] ) :
 					$custom_post_type = explode(',', $options['hook'][$i]['custom_post_type']);
@@ -950,30 +968,38 @@ type = file';
 						if ( !empty($options['hook'][$i]['use_php']) ) :
 							$options['hook'][$i]['content'] = $this->EvalBuffer(stripcslashes($options['hook'][$i]['content']));
 						endif;
-						if ( $options['hook'][$i]['position'] == 0 )
+						if ( $options['hook'][$i]['position'] == 0 ) :
 							$content .= $options['hook'][$i]['content'];
-						elseif ( $options['hook'][$i]['position'] == 2 )
+						elseif ( $options['hook'][$i]['position'] == 2 ) :
 							$content = preg_replace('/\[cfthook hook='.$i.'\]/', $options['hook'][$i]['content'], $content);
-						else
+						elseif ( $options['hook'][$i]['position'] == 3 ) :
+							$content = preg_replace('/(<span id="more-[0-9]+"><\/span>)/', $options['hook'][$i]['content']."$1", $content);
+						else :
 							$content = $options['hook'][$i]['content'] . $content;
+						endif;
 					endif;
 				else :
 					if ( !empty($options['hook'][$i]['use_php']) ) :
 							$options['hook'][$i]['content'] = $this->EvalBuffer(stripcslashes($options['hook'][$i]['content']));
 					endif;
-					if ( $options['hook'][$i]['position'] == 0 )
+					if ( $options['hook'][$i]['position'] == 0 ) :
 						$content .= $options['hook'][$i]['content'];
-					elseif ( $options['hook'][$i]['position'] == 2 )
+					elseif ( $options['hook'][$i]['position'] == 2 ) :
 						$content = preg_replace('/\[cfthook hook='.$i.'\]/', $options['hook'][$i]['content'], $content);
-					else
+					elseif ( $options['hook'][$i]['position'] == 3 ) :
+						$content = preg_replace('/(<span id="more-[0-9]+"><\/span>)/', $options['hook'][$i]['content']."$1", $content);
+					else :
 						$content = $options['hook'][$i]['content'] . $content;
+					endif;
 				endif;
 			endfor;
+			return !empty($strip_shortcode)? $content : do_shortcode($content);
+		else :
+			return $content;
 		endif;
-				
-		return !empty($strip_shortcode)? $content : do_shortcode($content);
+		
 	}
-	
+
 	function custom_field_template_admin() {
 		global $wp_version;
 		$locale = get_locale();
@@ -1013,6 +1039,7 @@ type = file';
 			$options['custom_field_template_disable_save_button'] = isset($_POST['custom_field_template_disable_save_button']) ? 1 : '';
 			$options['custom_field_template_disable_default_custom_fields'] = isset($_POST['custom_field_template_disable_default_custom_fields']) ? 1 : '';
 			$options['custom_field_template_disable_quick_edit'] = isset($_POST['custom_field_template_disable_quick_edit']) ? 1 : '';
+			$options['custom_field_template_disable_admin_search'] = isset($_POST['custom_field_template_disable_admin_search']) ? 1 : '';
 			$options['custom_field_template_disable_custom_field_column'] = isset($_POST['custom_field_template_disable_custom_field_column']) ? 1 : '';
 			$options['custom_field_template_replace_the_title'] = isset($_POST['custom_field_template_replace_the_title']) ? 1 : '';
 			$options['custom_field_template_deploy_box'] = isset($_POST['custom_field_template_deploy_box']) ? 1 : '';
@@ -1260,6 +1287,11 @@ margin-bottom:0pt;
 </td>
 </tr>
 <tr><td>
+<p><label for="custom_field_template_disable_admin_search"><?php _e('In case that you would like to forbid to use the admin search.', 'custom-field-template'); ?>:<br />
+<input type="checkbox" name="custom_field_template_disable_admin_search" id="custom_field_template_disable_admin_search" value="1" <?php if ( !empty($options['custom_field_template_disable_admin_search']) ) { echo 'checked="checked"'; } ?> /> <?php _e('Disable the admin search', 'custom-field-template'); ?></label></p>
+</td>
+</tr>
+<tr><td>
 <p><label for="custom_field_template_disable_custom_field_column"><?php _e('In case that you would like to forbid to display the custom field column on the edit post list page.', 'custom-field-template'); ?>:<br />
 <input type="checkbox" name="custom_field_template_disable_custom_field_column" id="custom_field_template_disable_custom_field_column" value="1" <?php if ( !empty($options['custom_field_template_disable_custom_field_column']) ) { echo 'checked="checked"'; } ?> /> <?php _e('Disable the custom field column (The quick edit also does not work.)', 'custom-field-template'); ?></label></p>
 </td>
@@ -1419,6 +1451,7 @@ ex. `radio` and `select`:</dt><dd>$values = array('dog', 'cat', 'monkey'); $defa
 <tr><td>
 <p><label for="custom_field_template_hook_position[<?php echo $i; ?>]"><?php echo sprintf(__('Position', 'custom-field-template'), $i); ?></label>:<br />
 <label><input type="radio" name="custom_field_template_hook_position[<?php echo $i; ?>]" value="1" <?php if( isset($options['hook'][$i]['position']) && $options['hook'][$i]['position']==1 ) echo ' checked="checked"'; ?> /> <?php _e('Before the content', 'custom-field-template'); ?></label> 
+<label><input type="radio" name="custom_field_template_hook_position[<?php echo $i; ?>]" value="3" <?php if( isset($options['hook'][$i]['position']) && $options['hook'][$i]['position']==3 ) echo ' checked="checked"'; ?> /> <?php _e('Before the more tag', 'custom-field-template'); ?></label> 
 <label><input type="radio" name="custom_field_template_hook_position[<?php echo $i; ?>]" value="0" <?php if( isset($options['hook'][$i]['position']) && $options['hook'][$i]['position']==0) echo ' checked="checked"'; ?> /> <?php _e('After the content', 'custom-field-template'); ?></label> 
 <label><input type="radio" name="custom_field_template_hook_position[<?php echo $i; ?>]" value="2" <?php if( isset($options['hook'][$i]['position']) && $options['hook'][$i]['position']==2) echo ' checked="checked"'; ?> /> <?php echo sprintf(__('Inside the content ([cfthook hook=%d])', 'custom-field-template'), $i); ?></label>
 </p>

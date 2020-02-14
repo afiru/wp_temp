@@ -29,13 +29,7 @@ function theme_header_customizer( $wp_customize ) {
         'priority' => 30, //カスタマイザー項目の表示順
         'description' => 'ヘッダー(通常用)設定について', //セクションの説明
     ) );    
-    $wp_customize->add_setting( header_back_image );
-    $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, header_back_image, array(
-        'label' => 'ヘッダー背景', //設定ラベル
-        'section' => header_section, //セクションID
-        'settings' => header_back_image, //セッティングID
-        'description' => 'ヘッダー背景をアップロードして変えましょう。',
-    ) ) );
+
     
     $wp_customize->add_setting( header_logo_pc_image );
     $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, header_logo_pc_image, array(

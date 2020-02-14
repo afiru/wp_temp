@@ -1,11 +1,11 @@
 <?php
 /**
  * Name       : MW WP Form Contact Data Setting
- * Version    : 2.0.0
+ * Version    : 2.0.1
  * Author     : Takashi Kitajima
  * Author URI : https://2inc.org
  * Created    : January 1, 2015
- * Modified   : June 1, 2017
+ * Modified   : October 25, 2019
  * License    : GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
@@ -28,6 +28,12 @@ class MW_WP_Form_Contact_Data_Setting {
 	 * @var string not-supported|reservation|supported
 	 */
 	protected $response_status = 'not-supported';
+
+	/**
+	 * Sended mail to
+	 * @var string
+	 */
+	protected $admin_mail_to;
 
 	/**
 	 * Memo
@@ -123,8 +129,10 @@ class MW_WP_Form_Contact_Data_Setting {
 			if ( 'response_status' === $key ) {
 				$response_statuses = $this->get_response_statuses();
 				if ( isset( $response_statuses[ $this->response_status ] ) ) {
-					return $this->response_status;
+					return $this->$key;
 				}
+			} elseif ( 'admin_mail_to' === $key ) {
+				return $this->$key;
 			}
 			return $this->$key;
 		} elseif ( isset( $this->options[ $key ] ) ) {
@@ -146,14 +154,15 @@ class MW_WP_Form_Contact_Data_Setting {
 			return;
 		}
 
-		if ( 'response_status' !== $key ) {
+		if ( 'response_status' === $key ) {
+			if ( array_key_exists( $value, $this->get_response_statuses() ) ) {
+				$this->$key = $value;
+				return;
+			}
+		} elseif ( 'admin_mail_to' === $key ) {
 			$this->$key = $value;
-			return;
-		}
-
-		if ( array_key_exists( $value, $this->get_response_statuses() ) ) {
+		} elseif ( 'memo' === $key ) {
 			$this->$key = $value;
-			return;
 		}
 	}
 
